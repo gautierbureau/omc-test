@@ -1,0 +1,31 @@
+name: omc
+
+on: [push]
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  macos:
+    name: MacOS
+    runs-on: macos-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v1
+
+      - name: Pre-requisites
+        run: brew install automake gnu-sed
+
+      - name: Install
+        run: |
+          ln -s /usr/local/bin/gfortran-9 /usr/local/bin/gfortran
+          git clone https://github.com/OpenModelica/OpenModelica.git
+          cd OpenModelica
+          sed -i 's/OMPlot OMEdit OMNotebook OMShell OMSens_Qt//' configure.ac
+          sed -i 's/OMPlot-omplot OMEdit-omedit OMNotebook-omnotebook OMShell-omshell OMSens_Qt-omsens_qt//' configure.ac
+          install_dir="$(cd .. && pwd)"
+          autoconf
+          ./configure --prefix=$install_dir --disable-modelica3d --disable-omnotebook --disable-omshell-terminal --with-qwt=NO --with-omc=no
+          make
+          make install
