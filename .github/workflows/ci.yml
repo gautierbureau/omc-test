@@ -26,6 +26,6 @@ jobs:
           sed -i '' 's/OMPlot-omplot OMEdit-omedit OMNotebook-omnotebook OMShell-omshell OMSens_Qt-omsens_qt//' configure.ac
           install_dir="$(cd .. && pwd)"
           autoconf
-          ./configure --prefix=$install_dir --disable-modelica3d --disable-omnotebook --disable-omshell-terminal --with-qwt=NO --with-omc=no
+          ./configure CC=clang CXX=clang++ --prefix=$install_dir --disable-modelica3d --disable-omnotebook --disable-omshell-terminal --with-qwt=NO --with-omc=no
           make
           make install
